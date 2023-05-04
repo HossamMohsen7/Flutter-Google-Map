@@ -13,7 +13,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late MapController mapController;
   final List<GeoPoint> points = [];
-  final List<String> productNames = [];
+  final List productNames = [];
   int _selectedIndex = 0;
 
   @override
@@ -25,10 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     final db = firestore.FirebaseFirestore.instance;
     db.collection("products").get().then((products) {
-      products.docs.forEach((element) {
-        productNames
-            .add(element.get("name") + " - " + element.get("price").toString());
-      });
+      productNames.addAll(products.docs);
     });
   }
 
@@ -36,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Pharmacies"),
+        title: const Text("PharmacyFinder"),
         actions: [
           IconButton(
             onPressed: () async {
@@ -102,15 +99,28 @@ class _HomeScreenState extends State<HomeScreen> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Center(
-              child: ListView.separated(
+              child: GridView.builder(
                 itemCount: productNames.length,
-                separatorBuilder: ((context, index) {
-                  return Divider();
-                }),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                ),
                 itemBuilder: (context, index) {
-                  return Text(
-                    "${productNames[index]}",
-                    style: TextStyle(fontSize: 22),
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: Image.network(
+                            productNames[index]['image'],
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        Text(productNames[index]['name']),
+                        SizedBox(height: 6),
+                        Text(productNames[index]['price']),
+                      ],
+                    ),
                   );
                 },
               ),

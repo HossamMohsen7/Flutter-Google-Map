@@ -1,17 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/screens/home_screen.dart';
+import 'package:flutter_app/screens/login_screen.dart';
 
-import 'sign_up_screen.dart';
-
-class LoginScreen extends StatefulWidget {
-  LoginScreen({super.key});
+class SignUpScreen extends StatefulWidget {
+  SignUpScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   bool isLoading = false;
@@ -66,7 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                         try {
                           final result = await FirebaseAuth.instance
-                              .signInWithEmailAndPassword(
+                              .createUserWithEmailAndPassword(
                                   email: email, password: password);
 
                           if (result.user?.uid != null) {
@@ -84,12 +83,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                   e.message ?? 'Wrong Email or password')));
                         } catch (e) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Something wrong!')));
+                              SnackBar(content: Text("Something wrong!")));
                         }
                         setState(() => isLoading = false);
                       },
                       child: const Text(
-                        "Login",
+                        "Sign up",
                         style: TextStyle(color: Colors.deepPurple),
                       ),
                       style: ElevatedButton.styleFrom(
@@ -104,10 +103,10 @@ class _LoginScreenState extends State<LoginScreen> {
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (c) => SignUpScreen()));
+                      MaterialPageRoute(builder: (c) => LoginScreen()));
                 },
                 child: Text(
-                  'Sign up now',
+                  'login now',
                   style: TextStyle(color: Colors.deepPurple),
                 ),
               ),
